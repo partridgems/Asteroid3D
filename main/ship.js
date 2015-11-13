@@ -35,9 +35,19 @@ function getAvatar() {
     // Add collision listener
     avatar.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
         if ( other_object.name == 'Asteroid' ) {
-            avatar.isCrashed = true;
+            if ( avatar.isShield ) {
+                // Stabilize the avatar and blast the asteroid away
+                other_object.setLinearVelocity(contact_normal.setLength(50));
+
+                avatar.Stabilize();
+            } else {
+                avatar.isCrashed = true;
+            }
         }
     });
+
+    avatar.shield = getShield();
+    avatar.add(avatar.shield);
 
     //Initialize movement parameters
     avatar.turningLeft = false;
@@ -49,6 +59,7 @@ function getAvatar() {
     avatar.wasThrust = false;
     avatar.wasBrake = false;
     avatar.isCrashed = false;
+    avatar.isShield = true;
 
     avatar.turnL = function() {
         if (avatar.turningRight) {
@@ -105,12 +116,31 @@ function getAvatar() {
     avatar.crashed = function() {
         return avatar.isCrashed;
     }
+    avatar.shieldsUp = function() {
+        avatar.isShield = true;
+    }
+    avatar.shieldsDn = function() {
+        avatar.isShield = false;
+    }
+    avatar.updateShield = function() {
+        avatar.shield.material.visible = avatar.isShield;
+    }
+    avatar.stabilize = function() {
+        avatar.position.y = avatarHeight;
+        avatar.__dirtyPosition = true;
+        avatar.__dirtyRotation = true;
+        avatar.setLinearVelocity(new THREE.Vector3(avatar.getLinearVelocity().x, 0, avatar.getLinearVelocity().z));
+        avatar.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+    }
 
     return avatar;
 }
 
 function updateAvatar() {
     // Update avatar from its state
+    avatar.updateShield();
+    avatar.stabilize();
+
     if (avatar.turningLeft) {
         avatar.rotateY(rotationSpeed);
         avatar.setAngularVelocity(new THREE.Vector3(0, 0, 0));
@@ -150,4 +180,50 @@ function updateAvatar() {
         avatar.position.z -= boardHeight;
         avatar.__dirtyPosition = true;
     }
+}
+
+function getShield() {
+    // Add a shield?
+    var sPoints = [
+        // Nose
+        new THREE.Vector3(-.2, -.2, 5),
+        new THREE.Vector3(-.2, .2, 5),
+        new THREE.Vector3(.2, -.2, 5),
+        new THREE.Vector3(.2, .2, 5),
+        // Rear
+        new THREE.Vector3(.2, 0, -1),
+        new THREE.Vector3(-.2, 0, -1),
+        // Left and right sides
+        new THREE.Vector3(1.7, 0, 2),
+        new THREE.Vector3(-1.7, 0, 2),
+        new THREE.Vector3(1.5, 0, 2.2),
+        new THREE.Vector3(-1.5, 0, 2.2),
+        new THREE.Vector3(2, 0, 0),
+        new THREE.Vector3(-2, 0, 0),
+        // Upper and lower geometry
+        new THREE.Vector3(0, -.5, 1),
+        new THREE.Vector3(0, -.5, 2),
+        new THREE.Vector3(0, 1, 0),
+        new THREE.Vector3(0, 1, 2)
+    ];
+    var shieldGeometry = new THREE.ConvexGeometry(sPoints);
+    // Move the ship's center so that it rotates as expected
+    shieldGeometry.applyMatrix( new THREE.Matrix4().makeTranslation(0, 0, -1.8) );
+    var shieldSize = 1.4;
+    shieldGeometry.applyMatrix( new THREE.Matrix4().makeScale(shieldSize, shieldSize, shieldSize) );
+    var shieldMaterial = new THREE.MeshLambertMaterial({color: 0x62cbff,
+        shading: THREE.SmoothShading, transparent: true, opacity: .3});
+    var shield = new Physijs.ConvexMesh(shieldGeometry, shieldMaterial);
+
+    shield.name = "Shield";
+
+    // Add collision listener
+    shield.addEventListener( 'collision', function( other_object,
+        relative_velocity, relative_rotation, contact_normal ) {
+        if ( other_object.name == 'Asteroid' ) {
+            other_object.setLinearVelocity(contact_normal*5);
+        }
+    });
+
+    return shield;
 }
