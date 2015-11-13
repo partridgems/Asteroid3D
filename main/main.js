@@ -22,6 +22,7 @@ function init() {
     stats = initStats();
     display = initDisplay();
     gameOver = initGameOver();
+    paused = initPaused();
 
     // create a render and set the size
     renderer = new THREE.WebGLRenderer(/*{ alpha: true }*/);
@@ -83,12 +84,30 @@ function init() {
 
         return gameOver;
     }
+
+    function initPaused() {
+
+        var paused = new Paused();
+
+        // Align top-left
+        gameOver.domElement.style.position = 'absolute';
+        gameOver.domElement.style.left = '0px';
+        gameOver.domElement.style.top = '0px';
+        gameOver.domElement.style.visibility = 'hidden';
+
+        document.getElementById('Paused').appendChild(paused.domElement);
+
+        return paused;
+    }
 }
 
 // once everything is loaded, we run our Three.js stuff.
 function newGame() {
     // create a scene, that will hold all our elements such as objects, cameras and lights.
     scene = new Physijs.Scene();
+
+    scene.paused = false;
+
     // SPACE!!
     scene.setGravity(new THREE.Vector3(0, 0, 0));
 
@@ -127,7 +146,7 @@ function newGame() {
     // ------------------------------------------
 
     difficulty = startDifficulty;
-    clock = new THREE.Clock();
+    clock = new THREE.Clock(false);
     clock.start();
 
     addAsteroid(4, 9);
@@ -151,10 +170,12 @@ function render() {
         cleanupAsteroids();
     }
 
-    // Add additional asteroids every 10 seconds/difficulty on average
-    if (Math.random() < difficulty/10/60) {
-        addAsteroid(Math.random() * 6 + 2,
-            Math.random()*(5+difficulty) + 2*difficulty + 3);
+    if ( !scene.paused ) {
+        // Add additional asteroids every 10 seconds/difficulty on average
+        if (Math.random() < difficulty/10/60) {
+            addAsteroid(Math.random() * 6 + 2,
+                Math.random()*(5+difficulty) + 2*difficulty + 3);
+        }
     }
 
     // Check for crash--
@@ -166,7 +187,9 @@ function render() {
             display.update(++difficulty);
         }
 
-        updateAvatar();
+        if (!scene.paused) {
+            updateAvatar();
+        }
     } else { // We've crashed!
         gameOver.update();
 
@@ -179,7 +202,9 @@ function render() {
     }
 
     // Simulate one step of physics per scene
-    scene.simulate( undefined, 1 );
+    if (!scene.paused) {
+        scene.simulate( undefined, 1 );
+    }
 
     // render using requestAnimationFrame
     requestAnimationFrame(render);
