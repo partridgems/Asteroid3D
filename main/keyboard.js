@@ -4,7 +4,20 @@ function createEventListeners(){
         switch( event.keyCode ) {
 
         case 80: /* P */
-            addAsteroid(Math.random() * 3 + 4, Math.random()*10 + 5);
+            // addAsteroid(Math.random() * 3 + 4, Math.random()*10 + 5);
+            if (!scene.paused) {
+                scene.paused = true;
+                clock.stop();
+                paused.pause();
+            } else {
+                scene.paused = false;
+                clock.start();
+                paused.unpause();
+            }
+        break;
+
+        case 79: /* O */
+            avatar.isShield = !avatar.isShield;
         break;
 
         case 32: /* space */
@@ -22,28 +35,28 @@ function createEventListeners(){
             }
         break;
 
-         case 38: /*up*/
-         case 87: /*W*/
-             avatar.thrust();
-         break;
+        case 38: /*up*/
+        case 87: /*W*/
+            avatar.thrust();
+        break;
 
-         case 40: /*down*/
-         case 83: /*S*/
-             avatar.brake();
-         break;
+        case 40: /*down*/
+        case 83: /*S*/
+            avatar.brake();
+        break;
 
-         case 37: /*left*/
-         case 65: /*A*/
-             avatar.turnL();
-         break;
+        case 37: /*left*/
+        case 65: /*A*/
+            avatar.turnL();
+        break;
 
-         case 39: /*right*/
-         case 68: /*D*/
-             avatar.turnR();
-         break;
+        case 39: /*right*/
+        case 68: /*D*/
+            avatar.turnR();
+        break;
 
-         }
-     }
+        }
+    }
 
     document.addEventListener("keydown",keyDownListener,false);
 
