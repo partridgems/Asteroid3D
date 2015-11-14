@@ -18,7 +18,9 @@ LEFT/RIGHT or A/D to Turn
 
 SPACE to Hyperspace
 
-(There are some hidden controls for Dev)
+P to Pause
+
+(There are some hidden controls for Dev, set debug_mode=true in console to use them: y,u,i,o are all commands)
 
 
 

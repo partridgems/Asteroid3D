@@ -11,7 +11,7 @@ var startDifficulty = 1;
 var followDistance = 100;
 var asterStAlt = 150
 
-debug_mode = true;
+debug_mode = false;
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
