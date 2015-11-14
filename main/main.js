@@ -175,7 +175,7 @@ function render() {
         cleanupAsteroids();
     }
 
-    if (time > 1 && time % 27 + difficulty < 1/59 ) {
+    if (time > 1 && time % (27 + difficulty) < 1/59 ) {
         addShieldPowerup();
     }
 
