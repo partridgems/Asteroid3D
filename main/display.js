@@ -112,32 +112,21 @@ var Paused = function () {
 
 	var container = document.createElement( 'div' );
 	container.id = 'Paused';
-	container.style.cssText = 'width:' + window.innerWidth + 'px;height:'
-		+ window.innerHeight + 'px;opacity:0.9';
+	container.style.cssText = 'width:' + window.innerWidth + 'px;height:' + window.innerHeight +
+		'px;opacity:1.0;background:rgba(61, 61, 148, 0.7)';
+	container.style.visibility = 'hidden';
 
 	var pausedDiv = document.createElement( 'div' );
 	pausedDiv.id = 'paused';
-	pausedDiv.style.cssText = 'padding:10px 0 10px 0;text-align:left;background:rgb(0,0,0);background:rgba(0,0,0,0)';
+	pausedDiv.style.cssText = 'padding:10px 0 10px 0;text-align:left;background:rgba(0,0,0,0)';
 	container.appendChild( pausedDiv );
 
 	var pausedText = document.createElement( 'div' );
 	pausedText.id = 'pausedText';
-	pausedText.style.cssText = 'color:#f00;font-family:"Courier New",Courier,monospace;' +
-		'font-size:72px;font-weight:bold;line-height:15px;text-align:center;letter-spacing:10px;word-spacing:-20px';
+	pausedText.style.cssText = 'color:#000;font-family:"Courier New",Courier,monospace;' +
+		'font-size:72px;font-weight:bold;line-height:'+window.innerHeight*.9+'px;text-align:center;letter-spacing:10px;word-spacing:-20px';
 	pausedText.innerHTML = 'PAUSED';
-	pausedDiv.appendChild( goText );
-
-	// var contDiv = document.createElement( 'div' );
-	// contDiv.id = 'cont';
-	// contDiv.style.cssText = 'padding:20px 0 10px 0;text-align:left;background:rgb(0,0,0);background:rgba(0,0,0,0)';
-	// container.appendChild( contDiv );
-	//
-	// var contText = document.createElement( 'div' );
-	// contText.id = 'contText';
-	// contText.style.cssText = 'color:#f00;font-family:"Courier New",Courier,monospace;' +
-	// 	'font-size:44px;font-weight:normal;line-height:20px;text-align:center;letter-spacing:0px;word-spacing:-2px';
-	// contText.innerHTML = 'Press \'P\' to continue';
-	// contDiv.appendChild( contText );
+	pausedDiv.appendChild( pausedText );
 
 	return {
 

@@ -11,6 +11,8 @@ var startDifficulty = 1;
 var followDistance = 100;
 var asterStAlt = 150
 
+debug_mode = false;
+
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
 Physijs.scripts.ammo = './ammo.js';
@@ -30,6 +32,9 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMapEnabled = true;
     renderer.shadowMapType = THREE.PCFSoftShadowMap;
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.top = '0px';
+    renderer.domElement.style.zIndex = '-1';
 
     // add the output of the renderer to the html element
     document.getElementById("WebGL-output").appendChild(renderer.domElement);
@@ -60,7 +65,7 @@ function init() {
 
         var display = new Display();
 
-        // Align top-left
+        // Align top center
         display.domElement.style.position = 'absolute';
         display.domElement.style.left = (window.innerWidth/2 - display.w/2).toString()+'px';
         display.domElement.style.top = '0px';
@@ -74,7 +79,7 @@ function init() {
 
         var gameOver = new GameOver();
 
-        // Align top-left
+        // Align just above center middle
         gameOver.domElement.style.position = 'absolute';
         gameOver.domElement.style.left = (window.innerWidth/2 - gameOver.w/2).toString()+'px';
         gameOver.domElement.style.top = window.innerHeight/2 - 132 + 'px';
@@ -90,10 +95,10 @@ function init() {
         var paused = new Paused();
 
         // Align top-left
-        gameOver.domElement.style.position = 'absolute';
-        gameOver.domElement.style.left = '0px';
-        gameOver.domElement.style.top = '0px';
-        gameOver.domElement.style.visibility = 'hidden';
+        paused.domElement.style.position = 'absolute';
+        paused.domElement.style.left = '0px';
+        paused.domElement.style.top = '0px';
+        paused.domElement.style.visibility = 'hidden';
 
         document.getElementById('Paused').appendChild(paused.domElement);
 

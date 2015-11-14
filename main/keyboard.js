@@ -4,7 +4,6 @@ function createEventListeners(){
         switch( event.keyCode ) {
 
         case 80: /* P */
-            // addAsteroid(Math.random() * 3 + 4, Math.random()*10 + 5);
             if (!scene.paused) {
                 scene.paused = true;
                 clock.stop();
@@ -16,8 +15,22 @@ function createEventListeners(){
             }
         break;
 
+        case 73: /* I */
+            if (debug_mode) {
+                addAsteroid(Math.random() * 3 + 4, Math.random()*10 + 5);
+            }
+        break;
+
+        case 85: /* U */
+            if (debug_mode) {
+                avatar.isCrashed = true;
+            }
+        break;
+
         case 79: /* O */
-            avatar.isShield = !avatar.isShield;
+            if (debug_mode) {
+                avatar.isShield = !avatar.isShield;
+            }
         break;
 
         case 32: /* space */
