@@ -71,9 +71,7 @@ function addAsteroid(size, speed) {
     target.normalize();
     target.multiplyScalar(speed);
 
-    mesh.position.x = start.x;
-    mesh.position.y = start.y;
-    mesh.position.z = start.z;
+    mesh.position.copy(start);
 
     mesh.name = "Asteroid";
 
@@ -111,10 +109,8 @@ function createBoard() {
 
     // rotate and position the plane
     plane.rotation.x = -0.5 * Math.PI;
-    plane.position.x = 0;
-    plane.position.y = 0;
-    plane.position.z = 0;
-
+    plane.position.set(0,0,0);
+    
     plane.name = "Board";
 
     return plane;

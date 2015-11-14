@@ -37,12 +37,15 @@ function getAvatar() {
         if ( other_object.name == 'Asteroid' ) {
             if ( avatar.isShield ) {
                 // Stabilize the avatar and blast the asteroid away
-                other_object.setLinearVelocity(contact_normal.setLength(50));
-
-                avatar.Stabilize();
+                other_object.setLinearVelocity(contact_normal.setLength(100));
+                avatar.shieldsDn();
+                avatar.stabilize();
             } else {
                 avatar.isCrashed = true;
             }
+        } else if ( !avatar.isShield && other_object.name == 'ShieldPowerup' ) {
+            scene.remove( other_object );
+            avatar.shieldsUp();
         }
     });
 
@@ -59,7 +62,7 @@ function getAvatar() {
     avatar.wasThrust = false;
     avatar.wasBrake = false;
     avatar.isCrashed = false;
-    avatar.isShield = true;
+    avatar.isShield = false;
 
     avatar.turnL = function() {
         if (avatar.turningRight) {

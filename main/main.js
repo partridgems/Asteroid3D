@@ -11,7 +11,7 @@ var startDifficulty = 1;
 var followDistance = 100;
 var asterStAlt = 150
 
-debug_mode = false;
+debug_mode = true;
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
@@ -173,6 +173,10 @@ function render() {
             Math.random()*(5+difficulty) + 4*difficulty + 3);
 
         cleanupAsteroids();
+    }
+
+    if (time > 1 && time % 27 + difficulty < 1/59 ) {
+        addShieldPowerup();
     }
 
     if ( !scene.paused ) {

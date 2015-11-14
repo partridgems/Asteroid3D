@@ -33,6 +33,12 @@ function createEventListeners(){
             }
         break;
 
+        case 89: /* Y */
+            if (debug_mode) {
+                addShieldPowerup();
+            }
+        break;
+
         case 32: /* space */
             if ( !avatar.crashed() ) { // Don't allow hyperspace after a crash
                 newPos = getBoardPoint();
