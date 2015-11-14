@@ -22,10 +22,10 @@ function addAsteroid(size, speed) {
         mesh = new Physijs.ConvexMesh(new THREE.DodecahedronGeometry(size, 0), materials[0]);
     break;
     case 3:
-        mesh = new Physijs.SphereMesh(new THREE.SphereGeometry(size, 7, 5), materials[0]);
+        mesh = new Physijs.ConvexMesh(new THREE.SphereGeometry(size, 7, 5), materials[0]);
     break;
     default:
-        mesh = new Physijs.SphereMesh(new THREE.SphereGeometry(size, 6, 4), materials[0]);
+        mesh = new Physijs.ConvexMesh(new THREE.SphereGeometry(size, 6, 4), materials[0]);
     break;
     }
 
@@ -110,7 +110,7 @@ function createBoard() {
     // rotate and position the plane
     plane.rotation.x = -0.5 * Math.PI;
     plane.position.set(0,0,0);
-    
+
     plane.name = "Board";
 
     return plane;
