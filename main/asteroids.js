@@ -1,5 +1,5 @@
 // Creates an asteroid with specified size (radius) and speed
-// Shape is chosen randomly from 2 geometries.
+// Shape is chosen randomly from several geometries.
 function addAsteroid(size, speed) {
     var materials = [
 

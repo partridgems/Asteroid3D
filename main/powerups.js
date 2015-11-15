@@ -1,3 +1,5 @@
+// Adds a shield power up to the board
+// The avatar's collision event handler must respond to this object
 function addShieldPowerup() {
 
     pMat = new THREE.MeshBasicMaterial({color: 0xffaa00, wireframe: true});

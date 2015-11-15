@@ -1,8 +1,10 @@
 /*
  * display.js handles various display dom elements used by the game
  * this code is adapted from the stats.js provided with three.js examples
+ * Essentially, this is just CSS done in JavaScript for non-3D aspects of the game
 */
 
+// Display contains level information
 var Display = function () {
 
 	var pxWidth = 240;
@@ -13,7 +15,8 @@ var Display = function () {
 
 	var levelDiv = document.createElement( 'div' );
 	levelDiv.id = 'level';
-	levelDiv.style.cssText = 'padding:10px 0 10px 0;text-align:left;background:rgb(0,0,0);background:rgba(0,0,0,0)';
+	levelDiv.style.cssText = 'padding:10px 0 10px 0;text-align:left;' +
+		'background:rgb(0,0,0);background:rgba(0,0,0,0)';
 	container.appendChild( levelDiv );
 
 	var levelText = document.createElement( 'div' );
@@ -47,6 +50,7 @@ var Display = function () {
 
 };
 
+// GameOver displays the game over message when the ship crashes
 var GameOver = function () {
 
 	var pxWidth = 600;
@@ -58,25 +62,29 @@ var GameOver = function () {
 
 	var goDiv = document.createElement( 'div' );
 	goDiv.id = 'go';
-	goDiv.style.cssText = 'padding:10px 0 10px 0;text-align:left;background:rgb(0,0,0);background:rgba(0,0,0,0)';
+	goDiv.style.cssText = 'padding:10px 0 10px 0;text-align:left;' +
+		'background:rgb(0,0,0);background:rgba(0,0,0,0)';
 	container.appendChild( goDiv );
 
 	var goText = document.createElement( 'div' );
 	goText.id = 'goText';
 	goText.style.cssText = 'color:#f00;font-family:"Courier New",Courier,monospace;' +
-		'font-size:72px;font-weight:bold;line-height:15px;text-align:center;letter-spacing:10px;word-spacing:-20px';
+		'font-size:72px;font-weight:bold;line-height:15px;text-align:center;' +
+		'letter-spacing:10px;word-spacing:-20px';
 	goText.innerHTML = '';
 	goDiv.appendChild( goText );
 
 	var contDiv = document.createElement( 'div' );
 	contDiv.id = 'cont';
-	contDiv.style.cssText = 'padding:20px 0 10px 0;text-align:left;background:rgb(0,0,0);background:rgba(0,0,0,0)';
+	contDiv.style.cssText = 'padding:20px 0 10px 0;text-align:left;' +
+		'background:rgb(0,0,0);background:rgba(0,0,0,0)';
 	container.appendChild( contDiv );
 
 	var contText = document.createElement( 'div' );
 	contText.id = 'contText';
 	contText.style.cssText = 'color:#f00;font-family:"Courier New",Courier,monospace;' +
-		'font-size:44px;font-weight:normal;line-height:20px;text-align:center;letter-spacing:0px;word-spacing:-2px';
+		'font-size:44px;font-weight:normal;line-height:20px;text-align:center;' +
+		'letter-spacing:0px;word-spacing:-2px';
 	contText.innerHTML = '';
 	contDiv.appendChild( contText );
 
@@ -108,23 +116,26 @@ var GameOver = function () {
 
 };
 
+// Paused partially obscures the screen when the game is paused
 var Paused = function () {
 
 	var container = document.createElement( 'div' );
 	container.id = 'Paused';
-	container.style.cssText = 'width:' + window.innerWidth + 'px;height:' + window.innerHeight +
-		'px;opacity:1.0;background:rgba(61, 61, 148, 0.7)';
+	container.style.cssText = 'width:' + window.innerWidth + 'px;height:' +
+		window.innerHeight + 'px;opacity:1.0;background:rgba(61, 61, 148, 0.7)';
 	container.style.visibility = 'hidden';
 
 	var pausedDiv = document.createElement( 'div' );
 	pausedDiv.id = 'paused';
-	pausedDiv.style.cssText = 'padding:10px 0 10px 0;text-align:left;background:rgba(0,0,0,0)';
+	pausedDiv.style.cssText = 'padding:10px 0 10px 0;text-align:left;' +
+		'background:rgba(0,0,0,0)';
 	container.appendChild( pausedDiv );
 
 	var pausedText = document.createElement( 'div' );
 	pausedText.id = 'pausedText';
 	pausedText.style.cssText = 'color:#000;font-family:"Courier New",Courier,monospace;' +
-		'font-size:72px;font-weight:bold;line-height:'+window.innerHeight*.9+'px;text-align:center;letter-spacing:10px;word-spacing:-20px';
+		'font-size:72px;font-weight:bold;line-height:'+window.innerHeight*.9+
+		'px;text-align:center;letter-spacing:10px;word-spacing:-20px';
 	pausedText.innerHTML = 'PAUSED';
 	pausedDiv.appendChild( pausedText );
 

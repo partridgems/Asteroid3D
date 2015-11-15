@@ -8,10 +8,10 @@ var zoomout = 1.2; // Default 1.2
 var avatarHeight = 3;
 var maxSpeed = 75;
 var startDifficulty = 1;
-var followDistance = 100;
-var asterStAlt = 150
+var followDistance = 100; // Max distance between camera and crashed ship
+var asterStAlt = 150; // Asteroid max starting altitude
 
-debug_mode = false;
+debug_mode = false; // Allows additional keyboard controls for development
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
@@ -21,10 +21,10 @@ Physijs.scripts.ammo = './ammo.js';
 // render allocation and other per session operations are run
 // per game operations are done in newGame() to allow restarting the game
 function init() {
-    stats = initStats();
-    display = initDisplay();
-    gameOver = initGameOver();
-    paused = initPaused();
+    stats = initStats(); // Contains FPS information
+    display = initDisplay(); // Contains current level
+    gameOver = initGameOver(); // Plays game over message
+    paused = initPaused(); // Shown when paused
 
     // create a render and set the size
     renderer = new THREE.WebGLRenderer(/*{ alpha: true }*/);
@@ -34,7 +34,7 @@ function init() {
     renderer.shadowMapType = THREE.PCFSoftShadowMap;
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0px';
-    renderer.domElement.style.zIndex = '-1';
+    renderer.domElement.style.zIndex = '-1'; // Places the animation behind all other displays
 
     // add the output of the renderer to the html element
     document.getElementById("WebGL-output").appendChild(renderer.domElement);
@@ -94,7 +94,7 @@ function init() {
 
         var paused = new Paused();
 
-        // Align top-left
+        // Align top-left (covers screen)
         paused.domElement.style.position = 'absolute';
         paused.domElement.style.left = '0px';
         paused.domElement.style.top = '0px';
@@ -107,6 +107,8 @@ function init() {
 }
 
 // once everything is loaded, we run our Three.js stuff.
+// This function handles all initializations that are redone for every new game
+// It can be safely called numerous times and freed resources will be gc'd
 function newGame() {
     // create a scene, that will hold all our elements such as objects, cameras and lights.
     scene = new Physijs.Scene();
@@ -116,7 +118,7 @@ function newGame() {
     // SPACE!!
     scene.setGravity(new THREE.Vector3(0, 0, 0));
 
-    // create a camera, which defines where we're looking at.
+    // create a camera looking from above and to the right, slightly rotated
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.x = -8*zoomout;
     camera.position.y = 80*zoomout;
@@ -131,7 +133,7 @@ function newGame() {
     ambientLight.name = "AmbLight";
     scene.add(ambientLight);
 
-    // add spotlight for the shadows
+    // add spotlight for the shadows with a large shadow camera
     var light = new THREE.SpotLight(0xffffff);
     var backoff = 1.5;
     light.position.set(-17*backoff, 72*backoff, 45*backoff);
@@ -143,22 +145,20 @@ function newGame() {
     light.name = "Light";
     scene.add(light);
 
+    // Add the avatar (ship)
     avatar = getAvatar();
     scene.add(avatar);
-
-    // ------------------------------------------
-    // Finished building the scene, now render it
-    // ------------------------------------------
 
     difficulty = startDifficulty;
     clock = new THREE.Clock(false);
     clock.start();
 
+    // Starting asteroids to get the game rolling
     addAsteroid(4, 9);
     addAsteroid(6, 7);
     addAsteroid(8, 5);
 
-    // Necessary to reset display on game restarts
+    // Necessary to reset displays on game restarts
     display.reset();
     gameOver.reset();
 }
@@ -175,11 +175,12 @@ function render() {
         cleanupAsteroids();
     }
 
-    if (time > 1 && time % (28 + difficulty) < 1/60 ) {
+    // Add a shield powerup every 30 seconds
+    if (time > 1 && time % 30 < 1/60 ) {
         addShieldPowerup();
     }
 
-    if ( !scene.paused ) {
+    if ( clock.running ) {
         // Add additional asteroids every 10 seconds/difficulty on average
         if (Math.random() < difficulty/10/60) {
             addAsteroid(Math.random() * 6 + 2,
@@ -200,6 +201,7 @@ function render() {
             updateAvatar();
         }
     } else { // We've crashed!
+        clock.stop();
         gameOver.update();
 
         camera.lookAt(avatar.position);

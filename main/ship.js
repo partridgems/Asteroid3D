@@ -1,4 +1,4 @@
-// Create the ship and return
+// Create the ship and return it
 function getAvatar() {
     var points = [
         new THREE.Vector3(0, 0, 5),
@@ -11,7 +11,7 @@ function getAvatar() {
         new THREE.Vector3(0, 1, 2)
     ];
     var avatarGeometry = new THREE.ConvexGeometry(points);
-    // Move the ship's center so that it rotates as expected
+    // Move the ship's center back so that it rotates as expected
     avatarGeometry.applyMatrix( new THREE.Matrix4().makeTranslation(0, 0, -1.8) );
 
     var material = new THREE.MeshPhongMaterial({color: 0xffff40});
@@ -25,14 +25,16 @@ function getAvatar() {
     avatar.traverse(function (e) {
         e.castShadow = true
     });
+
     avatar.name="Ship";
+
     avatar.position.y = avatarHeight;
 
-    // Add a wireframe
+    // Add a wireframe mesh on top of the phong mesh
     var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x0000dd, wireframe: true, transparent: true } );
     avatar.add(new Physijs.ConvexMesh(avatarGeometry, wireframeMaterial));
 
-    // Add collision listener
+    // Add collision listener to handle asteroids and shield power ups
     avatar.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
         if ( other_object.name == 'Asteroid' ) {
             if ( avatar.isShield ) {
@@ -49,10 +51,11 @@ function getAvatar() {
         }
     });
 
+    // Add the shield object, initially turned off
     avatar.shield = getShield();
     avatar.add(avatar.shield);
 
-    //Initialize movement parameters
+    //Initialize movement/state parameters -- used by updateAvatar()
     avatar.turningLeft = false;
     avatar.turningRight = false;
     avatar.wasTurningL = false;
@@ -64,6 +67,7 @@ function getAvatar() {
     avatar.isCrashed = false;
     avatar.isShield = false;
 
+    // Avatar state methods used by the keyboard controls
     avatar.turnL = function() {
         if (avatar.turningRight) {
             avatar.wasTurningR = true;
@@ -125,15 +129,21 @@ function getAvatar() {
     avatar.shieldsDn = function() {
         avatar.isShield = false;
     }
-    avatar.updateShield = function() {
+    avatar.updateShield = function() { // Sets the avatar's shield visible to match state
         avatar.shield.material.visible = avatar.isShield;
     }
-    avatar.stabilize = function() {
+    avatar.stabilize = function() { // This overrides the physics for collisions to allow picking up powerups and shielding against asteroids
         avatar.position.y = avatarHeight;
         avatar.__dirtyPosition = true;
         avatar.__dirtyRotation = true;
         avatar.setLinearVelocity(new THREE.Vector3(avatar.getLinearVelocity().x, 0, avatar.getLinearVelocity().z));
         avatar.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+    }
+    avatar.hyperspace = function() { // Jump to a new random point on the board
+        newPos = getBoardPoint();
+        avatar.position.x = newPos.x * .9;
+        avatar.position.z = newPos.z * .9;
+        avatar.__dirtyPosition = true;
     }
 
     return avatar;
@@ -185,6 +195,7 @@ function updateAvatar() {
     }
 }
 
+// Creates a shield mesh and returns it
 function getShield() {
     // Add a shield?
     var sPoints = [

@@ -1,3 +1,6 @@
+// Handle keyboard controls
+// Event listeners respond to keyboard actions by calling avatar state funcitons
+// or setting other game states such as paused
 function createEventListeners(){
 
     function keyDownListener( event ) {
@@ -15,6 +18,11 @@ function createEventListeners(){
             }
         break;
 
+        // Next 4 are special debug mode controls
+        // I: add a new asteroid to the scene
+        // U: immediate game over
+        // O: shield/unshield the avatar
+        // Y: add a shield power up to the board
         case 73: /* I */
             if (debug_mode) {
                 addAsteroid(Math.random() * 3 + 4, Math.random()*10 + 5);
@@ -41,10 +49,7 @@ function createEventListeners(){
 
         case 32: /* space */
             if ( !avatar.crashed() ) { // Don't allow hyperspace after a crash
-                newPos = getBoardPoint();
-                avatar.position.x = newPos.x * .9;
-                avatar.position.z = newPos.z * .9;
-                avatar.__dirtyPosition = true;
+                avatar.hyperspace();
             }
         break;
 
@@ -79,6 +84,8 @@ function createEventListeners(){
 
     document.addEventListener("keydown",keyDownListener,false);
 
+    // By adding key up listeners, we are able to respond to multiple inputs
+    // effectively even when they are released in a different order than pressed
     function keyUpListener( event ) {
         switch( event.keyCode ) {
 
