@@ -167,27 +167,27 @@ var SoundControl = function ( soundObj ) {
 	var container = document.createElement( 'div' );
 	container.id = 'sounds';
 	container.addEventListener( 'mousedown', function ( event ) { event.preventDefault(); setMode( ++ mode % 2 ) }, false );
-	container.style.cssText = 'width:80px;opacity:0.9;cursor:pointer';
+	container.style.cssText = 'width:170px;opacity:0.9;cursor:pointer';
 
 	var soundonDiv = document.createElement( 'div' );
 	soundonDiv.id = 'soundon';
-	soundonDiv.style.cssText = 'padding:0 0 3px 3px;text-align:left;background-color:#002';
+	soundonDiv.style.cssText = 'padding:10px 5px 10px 5px;text-align:center;background-color:#020';
 	container.appendChild( soundonDiv );
 
 	var soundonText = document.createElement( 'div' );
 	soundonText.id = 'soundonText';
-	soundonText.style.cssText = 'color:#0ff;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
+	soundonText.style.cssText = 'color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:24px;font-weight:bold;line-height:15px';
 	soundonText.innerHTML = 'SOUND ON';
 	soundonDiv.appendChild( soundonText );
 
 	var soundoffDiv = document.createElement( 'div' );
 	soundoffDiv.id = 'soundoff';
-	soundoffDiv.style.cssText = 'padding:0 0 3px 3px;text-align:left;background-color:#020;display:none';
+	soundoffDiv.style.cssText = 'padding:10px 5px 10px 5px;text-align:center;background-color:#220000;display:none';
 	container.appendChild( soundoffDiv );
 
 	var soundoffText = document.createElement( 'div' );
 	soundoffText.id = 'soundoffText';
-	soundoffText.style.cssText = 'color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
+	soundoffText.style.cssText = 'color:#ff0000;font-family:Helvetica,Arial,sans-serif;font-size:24px;font-weight:bold;line-height:15px';
 	soundoffText.innerHTML = 'SOUND OFF';
 	soundoffDiv.appendChild( soundoffText );
 
