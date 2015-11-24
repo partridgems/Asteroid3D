@@ -1,52 +1,32 @@
-// Functions for background sound (music)
-var Sound = function ( sources, radius, volume ) {
+THREE.Audio.prototype.restart = function () {
 
-    var audio = document.createElement( 'audio' );
+	this.source.stop();
 
-    for ( var i = 0; i < sources.length; i ++ ) {
+	var source = this.context.createBufferSource();
 
-        var source = document.createElement( 'source' );
-        source.src = sources[ i ];
+	source.buffer = this.source.buffer;
+	source.loop = this.source.loop;
+	source.onended = this.source.onended;
+	source.start( 0, 0 );
+	source.playbackRate.value = this.playbackRate;
 
-        audio.appendChild( source );
+	this.isPlaying = true;
 
-    }
+	this.source = source;
 
-    this.position = new THREE.Vector3();
+	this.connect();
 
-    this.play = function () {
+};
 
-        audio.play();
+var getBgSound = function() {
+    var listener = new THREE.AudioListener();
+    camera.add( listener );
 
-    }
+    var bgmusic = new THREE.Audio( listener );
+    bgmusic.load( 'media/376737_Skullbeatz___Bad_Cat_Maste.ogg' );
+    bgmusic.setRefDistance( 1000 );
+    bgmusic.autoplay = true;
+    bgmusic.setLoop( true );
 
-    this.update = function ( camera ) {
-
-        var distance = this.position.distanceTo( camera.position );
-
-        if ( distance <= radius ) {
-
-            audio.volume = volume * ( 1 - distance / radius );
-
-        } else {
-
-            audio.volume = 0;
-
-        }
-
-    }
-
+    return bgmusic;
 }
-
-sound1 = new Sound( [ 'sounds/358232_j_s_song.mp3', 'sounds/358232_j_s_song.ogg' ], 275, 1 );
-sound1.play();
-
-
-var listener = new THREE.AudioListener();
-camera.add( listener );
-
-var sound2 = new THREE.Audio( listener );
-sound2.load( 'sounds/376737_Skullbeatz___Bad_Cat_Maste.ogg' );
-sound2.setRefDistance( 20 );
-sound2.autoplay = true;
-mesh2.add( sound2 );

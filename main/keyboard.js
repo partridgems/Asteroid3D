@@ -57,6 +57,7 @@ function createEventListeners(){
             if ( avatar.crashed() ) { // Prevent accidental restarts
 
                 bgmusic.setVolume( 1.0 );
+                bgmusic.restart();
 
                 newGame();
 

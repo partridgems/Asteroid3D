@@ -45,14 +45,7 @@ function init() {
     newGame();
 
     // Background sound!
-    var listener = new THREE.AudioListener();
-    camera.add( listener );
-
-    bgmusic = new THREE.Audio( listener );
-    bgmusic.load( 'media/376737_Skullbeatz___Bad_Cat_Maste.ogg' );
-    bgmusic.setRefDistance( 1000 );
-    bgmusic.autoplay = true;
-    bgmusic.setLoop( true );
+    bgmusic = getBgSound();
     scene.add( bgmusic );
 
     soundControl = initSoundControl( bgmusic );
