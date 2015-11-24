@@ -126,7 +126,8 @@ function newGame() {
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     // add the board (plane) to the scene
-    scene.add(createBoard());
+    var board = createBoard();
+    scene.add(board);
 
     // add subtle ambient lighting
     var ambientLight = new THREE.AmbientLight(0x121212);
@@ -148,6 +149,18 @@ function newGame() {
     // Add the avatar (ship)
     avatar = getAvatar();
     scene.add(avatar);
+
+    // Background sound!
+    var listener = new THREE.AudioListener();
+    camera.add( listener );
+
+    bgsound = new THREE.Audio( listener );
+    bgsound.load( 'media/376737_Skullbeatz___Bad_Cat_Maste.ogg' );
+    bgsound.setRefDistance( 1000 );
+    bgsound.autoplay = false;
+    bgsound.setLoop( true );
+    board.add( bgsound );
+    scene.music = bgsound;
 
     difficulty = startDifficulty;
     clock = new THREE.Clock(false);
@@ -203,6 +216,8 @@ function render() {
     } else { // We've crashed!
         clock.stop();
         gameOver.update();
+
+        scene.music.gain.gain.value *= .99;
 
         camera.lookAt(avatar.position);
         // Keeps the camera within followDistance of the crashed ship

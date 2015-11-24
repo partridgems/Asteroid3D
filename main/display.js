@@ -159,3 +159,66 @@ var Paused = function () {
 	}
 
 };
+
+
+// Sound effects control on/off switch
+var SoundControl = function ( soundObj ) {
+
+	var container = document.createElement( 'div' );
+	container.id = 'sounds';
+	container.addEventListener( 'mousedown', function ( event ) { event.preventDefault(); setMode( ++ mode % 2 ) }, false );
+	container.style.cssText = 'width:80px;opacity:0.9;cursor:pointer';
+
+	var soundonDiv = document.createElement( 'div' );
+	soundonDiv.id = 'soundon';
+	soundonDiv.style.cssText = 'padding:0 0 3px 3px;text-align:left;background-color:#002';
+	container.appendChild( soundonDiv );
+
+	var soundonText = document.createElement( 'div' );
+	soundonText.id = 'soundonText';
+	soundonText.style.cssText = 'color:#0ff;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
+	soundonText.innerHTML = 'SOUND ON';
+	soundonDiv.appendChild( soundonText );
+
+	var soundoffDiv = document.createElement( 'div' );
+	soundoffDiv.id = 'soundoff';
+	soundoffDiv.style.cssText = 'padding:0 0 3px 3px;text-align:left;background-color:#020;display:none';
+	container.appendChild( soundoffDiv );
+
+	var soundoffText = document.createElement( 'div' );
+	soundoffText.id = 'soundoffText';
+	soundoffText.style.cssText = 'color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
+	soundoffText.innerHTML = 'SOUND OFF';
+	soundoffDiv.appendChild( soundoffText );
+
+	var setMode = function ( value ) {
+
+		mode = value;
+
+		switch ( mode ) {
+
+			case 0:
+				soundonDiv.style.display = 'block';
+				soundoffDiv.style.display = 'none';
+				soundObj.play();
+				break;
+			case 1:
+				soundonDiv.style.display = 'none';
+				soundoffDiv.style.display = 'block';
+				soundObj.pause();
+				break;
+		}
+
+	}
+
+	return {
+
+		REVISION: 11,
+
+		domElement: container,
+
+		setMode: setMode
+
+	}
+
+};
