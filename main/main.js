@@ -11,7 +11,7 @@ var startDifficulty = 1;
 var followDistance = 100; // Max distance between camera and crashed ship
 var asterStAlt = 150; // Asteroid max starting altitude
 
-debug_mode = true; // Allows additional keyboard controls for development
+debug_mode = false; // Allows additional keyboard controls for development
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
