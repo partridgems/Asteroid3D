@@ -61,10 +61,6 @@ THREE.Audio.prototype.play = function () {
 		return;
 
 	}
-	console.log('Called Play');
-	console.dir(this);
-	console.dir(this.source);
-	console.dir(this.source.buffer);
 
 	var source = this.context.createBufferSource();
 
