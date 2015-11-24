@@ -57,7 +57,10 @@ function createEventListeners(){
             if ( avatar.crashed() ) { // Prevent accidental restarts
 
                 bgmusic.setVolume( 1.0 );
-                bgmusic.restart();
+
+                // Restart music if turned on, otherwise stop it (resets at next play)
+                if ( soundControl.getMode() == 0 ) { bgmusic.restart(); }
+                else { bgmusic.stop(); }
 
                 newGame();
 
