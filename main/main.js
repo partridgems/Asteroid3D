@@ -38,10 +38,13 @@ function init() {
 
     // add the output of the renderer to the html element
     document.getElementById("WebGL-output").appendChild(renderer.domElement);
+    window.addEventListener('resize', onWindowResize, false);
 
     createEventListeners();
 
     newGame();
+
+    var soundControl = initSoundControl( scene.music );
 
     render();
 
@@ -103,6 +106,33 @@ function init() {
         document.getElementById('Paused').appendChild(paused.domElement);
 
         return paused;
+    }
+
+    function initSoundControl( soundObj ) {
+
+        var soundControl = new SoundControl( soundObj );
+
+        soundControl.setMode(0); // 0: play, 1: stop
+
+        // Align top-right
+        soundControl.domElement.style.position = 'absolute';
+        soundControl.domElement.style.left =  window.innerWidth - 170 + 'px';
+        soundControl.domElement.style.top = '0px';
+
+        document.getElementById("SoundControl").appendChild(soundControl.domElement);
+
+        return soundControl;
+    }
+
+    function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        display.domElement.style.left = (window.innerWidth/2 - display.w/2).toString()+'px';
+        gameOver.domElement.style.left = (window.innerWidth/2 - gameOver.w/2).toString()+'px';
+        soundControl.domElement.style.left =  window.innerWidth - 170 + 'px';
+
     }
 }
 
