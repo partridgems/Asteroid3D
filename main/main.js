@@ -135,6 +135,7 @@ function init() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         display.domElement.style.left = (window.innerWidth/2 - display.w/2).toString()+'px';
         gameOver.domElement.style.left = (window.innerWidth/2 - gameOver.w/2).toString()+'px';
+        gameOver.domElement.style.top = window.innerHeight/2 - 132 + 'px';
         soundControl.domElement.style.left =  window.innerWidth - 170 + 'px';
 
     }
