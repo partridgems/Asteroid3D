@@ -207,7 +207,18 @@ var SoundControl = function ( soundObj ) {
 				soundoffDiv.style.display = 'block';
 				soundObj.pause();
 				break;
+			default:
+				soundonDiv.style.display = 'block';
+				soundoffDiv.style.display = 'none';
+				mode = 0;
+				break;
 		}
+
+	}
+
+	var getMode = function () {
+
+		return mode;
 
 	}
 
@@ -217,7 +228,9 @@ var SoundControl = function ( soundObj ) {
 
 		domElement: container,
 
-		setMode: setMode
+		setMode: setMode,
+
+		getMode: getMode
 
 	}
 

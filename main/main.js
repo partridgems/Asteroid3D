@@ -11,7 +11,7 @@ var startDifficulty = 1;
 var followDistance = 100; // Max distance between camera and crashed ship
 var asterStAlt = 150; // Asteroid max starting altitude
 
-debug_mode = false; // Allows additional keyboard controls for development
+debug_mode = true; // Allows additional keyboard controls for development
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
@@ -44,7 +44,18 @@ function init() {
 
     newGame();
 
-    var soundControl = initSoundControl( scene.music );
+    // Background sound!
+    var listener = new THREE.AudioListener();
+    camera.add( listener );
+
+    bgmusic = new THREE.Audio( listener );
+    bgmusic.load( 'media/376737_Skullbeatz___Bad_Cat_Maste.ogg' );
+    bgmusic.setRefDistance( 1000 );
+    bgmusic.autoplay = true;
+    bgmusic.setLoop( true );
+    scene.add( bgmusic );
+
+    soundControl = initSoundControl( bgmusic );
 
     render();
 
@@ -112,7 +123,7 @@ function init() {
 
         var soundControl = new SoundControl( soundObj );
 
-        soundControl.setMode(0); // 0: play, 1: stop
+        soundControl.setMode(); // 0: play, 1: stop
 
         // Align top-right
         soundControl.domElement.style.position = 'absolute';
@@ -180,18 +191,6 @@ function newGame() {
     avatar = getAvatar();
     scene.add(avatar);
 
-    // Background sound!
-    var listener = new THREE.AudioListener();
-    camera.add( listener );
-
-    bgsound = new THREE.Audio( listener );
-    bgsound.load( 'media/376737_Skullbeatz___Bad_Cat_Maste.ogg' );
-    bgsound.setRefDistance( 1000 );
-    bgsound.autoplay = false;
-    bgsound.setLoop( true );
-    board.add( bgsound );
-    scene.music = bgsound;
-
     difficulty = startDifficulty;
     clock = new THREE.Clock(false);
     clock.start();
@@ -247,7 +246,8 @@ function render() {
         clock.stop();
         gameOver.update();
 
-        scene.music.gain.gain.value *= .99;
+        // Fade out the music
+        bgmusic.setVolume( bgmusic.getVolume() * 0.99 );
 
         camera.lookAt(avatar.position);
         // Keeps the camera within followDistance of the crashed ship

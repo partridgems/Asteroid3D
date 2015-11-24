@@ -55,7 +55,11 @@ function createEventListeners(){
 
         case 13: /* enter */
             if ( avatar.crashed() ) { // Prevent accidental restarts
+
+                bgmusic.setVolume( 1.0 );
+
                 newGame();
+
             }
         break;
 
