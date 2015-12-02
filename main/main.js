@@ -13,7 +13,7 @@ var asterStAlt = 150; // Asteroid max starting altitude
 var soundDefault = 0; // Starting sound condition. 0: Off 1: On
 var controlWidth = 200; // Width of control divs
 
-debug_mode = true; // Allows additional keyboard controls for development
+debug_mode = false; // Allows additional keyboard controls for development
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
