@@ -1,16 +1,23 @@
 // Creates an asteroid with specified size (radius) and speed
 // Shape is chosen randomly from several geometries.
-function addAsteroid(size, speed) {
+function addAsteroid(size, speed, rare) {
+    console.log("adding asteroid with size: " + size + " speed: " + speed + " rarity: " + rare);
     var materials = [
 
         new THREE.MeshLambertMaterial({color: Math.random() * 0xeeeeee, shading: THREE.FlatShading}),
-        new THREE.MeshBasicMaterial({color: 0x000000, wireframe: true})
+        new THREE.MeshBasicMaterial( { color: 0xf0f0f0, envMap: scene.textureCube, shading: THREE.FlatShading } )
 
     ];
 
     // Get random geometry and create mesh
     var mesh;
-    var type = Math.floor(Math.random()*5);
+    var rareProb = .15/5;
+    if (debug_mode) { rare *= 2; } // Makes reflective asteroids twice as likely in deubg mode
+    var types = 5; // Number of asteroid geometries including the special rare one
+    var type = Math.floor(Math.random()*types*rareProb);  // Once in a great while, make a reflective one! (TYPE 5)
+
+    if (rare) { type = 5; } // Allows manually spawning rate asteroids
+
     switch (type) {
     case 0:
         mesh = new Physijs.ConvexMesh( new THREE.IcosahedronGeometry(size), materials[0]);
@@ -24,10 +31,22 @@ function addAsteroid(size, speed) {
     case 3:
         mesh = new Physijs.ConvexMesh(new THREE.SphereGeometry(size, 7, 5), materials[0]);
     break;
-    default:
+    case 4:
         mesh = new Physijs.ConvexMesh(new THREE.SphereGeometry(size, 6, 4), materials[0]);
     break;
+    case 5:
+        size = 10;
+        speed = 5;
+        mesh = new Physijs.ConvexMesh( new THREE.IcosahedronGeometry(size), materials[1]);
+        console.log("Created a reflective asteroid");
+    break;
+    default:
+        console.warn("Hit default case in asteroid creation. This is not expected.");
+        mesh = new Physijs.ConvexMesh(new THREE.DodecahedronGeometry(size, 0), materials[0]);
     }
+
+
+
 
     mesh.traverse(function (e) {
         e.castShadow = true
@@ -38,7 +57,12 @@ function addAsteroid(size, speed) {
     // Starting random position, to be placed in a quadrant
     var start = getBoardPoint();
     // Heading toward this position
-    var target = getBoardPoint();
+    var target;
+    if (type == 5) {
+        target = new THREE.Vector3(0,0,0);
+    } else {
+        target = getBoardPoint();
+    }
 
     switch (quadrant) {
     case 0: // Left of the board
@@ -76,7 +100,11 @@ function addAsteroid(size, speed) {
     mesh.name = "Asteroid";
 
     scene.add(mesh);
-    mesh.setAngularVelocity(new THREE.Vector3(Math.random()*5, Math.random()*5, Math.random()*5));
+    if (type == 5) {
+        mesh.setAngularVelocity(new THREE.Vector3(Math.random(), Math.random(), Math.random()));
+    } else {
+        mesh.setAngularVelocity(new THREE.Vector3(Math.random()*5, Math.random()*5, Math.random()*5));
+    }
     mesh.setLinearVelocity(target);
 }
 

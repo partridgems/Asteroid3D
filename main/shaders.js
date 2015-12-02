@@ -9,6 +9,7 @@
 // And textures from http://scmapdb.com/skybox:space,
 // http://en.spaceengine.org/forum/21-514-1
 // *************************************************************************
+var textureCube;
 function addSkyBox() {
     /* Skybox image files:
      *   2
@@ -37,4 +38,5 @@ function addSkyBox() {
     skyboxMesh = new THREE.Mesh( new THREE.BoxGeometry( 10000, 10000, 10000), material );
     // add it to the scene
     scene.add( skyboxMesh );
+    scene.textureCube = textureCube;
 }

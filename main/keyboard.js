@@ -59,6 +59,12 @@ function createEventListeners(){
             }
         break;
 
+        case 84: /* T */
+            if (debug_mode) {
+                addAsteroid(0,0,true); // Adds a rare asteroid (size and speed are ignored)
+            }
+        break;
+
         case 32: /* space */
             if ( !avatar.crashed() ) { // Don't allow hyperspace after a crash
                 avatar.hyperspace();
