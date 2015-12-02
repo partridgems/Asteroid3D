@@ -162,12 +162,12 @@ var Paused = function () {
 
 
 // Sound effects control on/off switch
-var SoundControl = function ( soundObj ) {
+var SoundControl = function ( soundObj, soundDefault ) {
 
 	var container = document.createElement( 'div' );
 	container.id = 'sounds';
-	container.addEventListener( 'mousedown', function ( event ) { event.preventDefault(); setMode( ++ mode % 2 ) }, false );
-	container.style.cssText = 'width:170px;opacity:0.9;cursor:pointer';
+	container.addEventListener( 'mousedown', function ( event ) { event.preventDefault(); setMode( ++ smode % 2 ) }, false );
+	container.style.cssText = 'width:'+controlWidth+'px;opacity:0.9;cursor:pointer';
 
 	var soundonDiv = document.createElement( 'div' );
 	soundonDiv.id = 'soundon';
@@ -193,24 +193,27 @@ var SoundControl = function ( soundObj ) {
 
 	var setMode = function ( value ) {
 
-		mode = value;
+		smode = value;
 
-		switch ( mode ) {
+		switch ( smode ) {
 
-			case 0:
+			case 1:
 				soundonDiv.style.display = 'block';
 				soundoffDiv.style.display = 'none';
 				soundObj.play();
 				break;
-			case 1:
+			case 0:
 				soundonDiv.style.display = 'none';
 				soundoffDiv.style.display = 'block';
 				soundObj.pause();
 				break;
-			default:
+			case 2: // Init Off
+				soundonDiv.style.display = 'none';
+				soundoffDiv.style.display = 'block';
+				break;
+			case 3: // Init On
 				soundonDiv.style.display = 'block';
 				soundoffDiv.style.display = 'none';
-				mode = 0;
 				break;
 		}
 
@@ -218,7 +221,82 @@ var SoundControl = function ( soundObj ) {
 
 	var getMode = function () {
 
-		return mode;
+		return smode;
+
+	}
+
+	return {
+
+		REVISION: 11,
+
+		domElement: container,
+
+		setMode: setMode,
+
+		getMode: getMode
+
+	}
+
+};
+
+// Unlocks camera for viewing sky box
+var CameraControl = function () {
+
+	var container = document.createElement( 'div' );
+	container.id = 'camcontrol';
+	container.addEventListener( 'mousedown', function ( event ) { event.preventDefault(); setMode( ++ cmode % 2 ) }, false );
+	container.style.cssText = 'width:'+controlWidth+'px;opacity:0.9;cursor:pointer';
+
+	var camonDiv = document.createElement( 'div' );
+	camonDiv.id = 'camon';
+	camonDiv.style.cssText = 'padding:10px 5px 10px 5px;text-align:center;background-color:#3c3d00';
+	container.appendChild( camonDiv );
+
+	var camonText = document.createElement( 'div' );
+	camonText.id = 'camonText';
+	camonText.style.cssText = 'color:#faff00;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:bold;line-height:15px';
+	camonText.innerHTML = 'FOLLOW CAMERA';
+	camonDiv.appendChild( camonText );
+
+	var camoffDiv = document.createElement( 'div' );
+	camoffDiv.id = 'camoff';
+	camoffDiv.style.cssText = 'padding:10px 5px 10px 5px;text-align:center;background-color:#020;display:none';
+	container.appendChild( camoffDiv );
+
+	var camoffText = document.createElement( 'div' );
+	camoffText.id = 'camoffText';
+	camoffText.style.cssText = 'color:#0f0;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:bold;line-height:15px';
+	camoffText.innerHTML = 'FIXED CAMERA';
+	camoffDiv.appendChild( camoffText );
+
+	var setMode = function ( value ) {
+		cmode = value;
+
+		switch ( cmode ) {
+
+			case 1:
+				camonDiv.style.display = 'block';
+				camoffDiv.style.display = 'none';
+				break;
+			case 0:
+				camonDiv.style.display = 'none';
+				camoffDiv.style.display = 'block';
+				if (! avatar.crashed) {
+					camera.lookAt(new THREE.Vector3(0,0,0));
+				}
+				break;
+			default: // Init case
+				camonDiv.style.display = 'none';
+				camoffDiv.style.display = 'block';
+				cmode = 0;
+				break;
+		}
+
+	}
+
+	var getMode = function () {
+
+		return cmode;
 
 	}
 

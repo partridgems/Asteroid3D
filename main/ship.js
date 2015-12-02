@@ -40,7 +40,7 @@ function getAvatar() {
             if ( avatar.isShield ) {
                 // Stabilize the avatar and blast the asteroid away
                 other_object.setLinearVelocity(contact_normal.setLength(100));
-                avatar.shieldsDn();
+                if (!debug_mode) { avatar.shieldsDn(); } // In debug mode, shield is god mode (for testing, of course)
                 avatar.stabilize();
             } else {
                 avatar.isCrashed = true;

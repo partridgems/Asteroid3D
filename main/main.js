@@ -6,16 +6,21 @@ var boardWidth = 120;
 var boardHeight = 80;
 var zoomout = 1.2; // Default 1.2
 var avatarHeight = 3;
-var maxSpeed = 75;
+var maxSpeed = 80;
 var startDifficulty = 1;
 var followDistance = 100; // Max distance between camera and crashed ship
 var asterStAlt = 150; // Asteroid max starting altitude
+var soundDefault = 0; // Starting sound condition. 0: Off 1: On
+var controlWidth = 200; // Width of control divs
 
-debug_mode = false; // Allows additional keyboard controls for development
+debug_mode = true; // Allows additional keyboard controls for development
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
 Physijs.scripts.ammo = './ammo.js';
+
+// Globals
+var stats, display, gameOver, paused, camControl, camera;
 
 // init is run once per session
 // render allocation and other per session operations are run
@@ -25,6 +30,7 @@ function init() {
     display = initDisplay(); // Contains current level
     gameOver = initGameOver(); // Plays game over message
     paused = initPaused(); // Shown when paused
+    camControl = initCamControl(); // Unlocks the camera for viewing the sky
 
     // create a render and set the size
     renderer = new THREE.WebGLRenderer(/*{ alpha: true }*/);
@@ -116,16 +122,32 @@ function init() {
 
         var soundControl = new SoundControl( soundObj );
 
-        soundControl.setMode(); // 0: play, 1: stop
+        soundControl.setMode(soundDefault + 2); // 1: play, 0: stop, +2 for init
 
         // Align top-right
         soundControl.domElement.style.position = 'absolute';
-        soundControl.domElement.style.left =  window.innerWidth - 170 + 'px';
+        soundControl.domElement.style.left =  window.innerWidth - controlWidth + 'px';
         soundControl.domElement.style.top = '0px';
 
         document.getElementById("SoundControl").appendChild(soundControl.domElement);
 
         return soundControl;
+    }
+
+    function initCamControl() {
+
+        var camControl = new CameraControl();
+
+        camControl.setMode();
+
+        // Align top-right
+        camControl.domElement.style.position = 'absolute';
+        camControl.domElement.style.left =  window.innerWidth - controlWidth + 'px';
+        camControl.domElement.style.top = '44px';
+
+        document.getElementById("CameraControl").appendChild(camControl.domElement);
+
+        return camControl;
     }
 
     function onWindowResize() {
@@ -136,7 +158,8 @@ function init() {
         display.domElement.style.left = (window.innerWidth/2 - display.w/2).toString()+'px';
         gameOver.domElement.style.left = (window.innerWidth/2 - gameOver.w/2).toString()+'px';
         gameOver.domElement.style.top = window.innerHeight/2 - 132 + 'px';
-        soundControl.domElement.style.left =  window.innerWidth - 170 + 'px';
+        soundControl.domElement.style.left =  window.innerWidth - controlWidth + 'px';
+        camControl.domElement.style.left =  window.innerWidth - controlWidth + 'px';
 
     }
 }
@@ -152,9 +175,10 @@ function newGame() {
 
     // SPACE!!
     scene.setGravity(new THREE.Vector3(0, 0, 0));
+    addSkyBox();
 
     // create a camera looking from above and to the right, slightly rotated
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 12000);
     camera.position.x = -8*zoomout;
     camera.position.y = 80*zoomout;
     camera.position.z = 60*zoomout;
@@ -235,6 +259,10 @@ function render() {
 
         if (!scene.paused) {
             updateAvatar();
+        }
+
+        if (camControl.getMode()) {
+            camera.lookAt(avatar.position);
         }
     } else { // We've crashed!
         clock.stop();

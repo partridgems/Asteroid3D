@@ -3,6 +3,18 @@
 // or setting other game states such as paused
 function createEventListeners(){
 
+    function mouseMoveListener(event){
+        if (debug_mode && event.buttons) {
+
+            var angleX = event.movementX/10.0/180.0*Math.PI;
+            var angleY = event.movementY/10.0/180.0*Math.PI
+            camera.rotateX(angleY);
+            camera.rotateY(angleX);
+        }
+    }
+
+   document.addEventListener("mousemove",mouseMoveListener,false);
+
     function keyDownListener( event ) {
         switch( event.keyCode ) {
 
@@ -47,6 +59,12 @@ function createEventListeners(){
             }
         break;
 
+        case 84: /* T */
+            if (debug_mode) {
+                addAsteroid(0,0,true); // Adds a rare asteroid (size and speed are ignored)
+            }
+        break;
+
         case 32: /* space */
             if ( !avatar.crashed() ) { // Don't allow hyperspace after a crash
                 avatar.hyperspace();
@@ -59,8 +77,8 @@ function createEventListeners(){
                 bgmusic.setVolume( 1.0 );
 
                 // Restart music if turned on, otherwise stop it (resets at next play)
-                if ( soundControl.getMode() == 0 ) { bgmusic.restart(); }
-                else { bgmusic.stop(); }
+                if ( soundControl.getMode() == 1 ) { bgmusic.restart(); }
+                else if ( bgmusic.isPlaying ) { bgmusic.stop(); }
 
                 newGame();
 

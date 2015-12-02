@@ -25,7 +25,7 @@ var getBgSound = function() {
     var bgmusic = new THREE.Audio( listener );
     bgmusic.load( 'media/376737_Skullbeatz___Bad_Cat_Maste.ogg' );
     bgmusic.setRefDistance( 1000 );
-    bgmusic.autoplay = true;
+    bgmusic.autoplay = soundDefault;
     bgmusic.setLoop( true );
 
     return bgmusic;
