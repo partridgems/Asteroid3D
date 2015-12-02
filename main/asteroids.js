@@ -1,7 +1,6 @@
 // Creates an asteroid with specified size (radius) and speed
 // Shape is chosen randomly from several geometries.
 function addAsteroid(size, speed, rare) {
-    console.log("adding asteroid with size: " + size + " speed: " + speed + " rarity: " + rare);
     var materials = [
 
         new THREE.MeshLambertMaterial({color: Math.random() * 0xeeeeee, shading: THREE.FlatShading}),
@@ -11,10 +10,10 @@ function addAsteroid(size, speed, rare) {
 
     // Get random geometry and create mesh
     var mesh;
-    var rareProb = .15/5;
+    var rareProb = .03;
     if (debug_mode) { rare *= 2; } // Makes reflective asteroids twice as likely in deubg mode
     var types = 5; // Number of asteroid geometries including the special rare one
-    var type = Math.floor(Math.random()*types*rareProb);  // Once in a great while, make a reflective one! (TYPE 5)
+    var type = Math.floor(Math.random()*types*(1+rareProb));  // Once in a great while, make a reflective one! (TYPE 5)
 
     if (rare) { type = 5; } // Allows manually spawning rate asteroids
 
@@ -36,7 +35,7 @@ function addAsteroid(size, speed, rare) {
     break;
     case 5:
         size = 10;
-        speed = 5;
+        speed = 7;
         mesh = new Physijs.ConvexMesh( new THREE.IcosahedronGeometry(size), materials[1]);
         console.log("Created a reflective asteroid");
     break;

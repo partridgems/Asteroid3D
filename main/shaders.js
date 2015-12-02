@@ -18,9 +18,9 @@ function addSkyBox() {
      */
     var pfx = "media/planet-skybox/sky_";
     var ext = ".jpg"
-    var urls = [ pfx + "neg_x" + ext, pfx + "pos_x" + ext,
+    var urls = [ pfx + "pos_x" + ext, pfx + "neg_x" + ext,
         pfx + "pos_y" + ext, pfx + "neg_y" + ext,
-        pfx + "pos_z" + ext, pfx + "neg_z" + ext ];
+        pfx + "neg_z" + ext, pfx + "pos_z" + ext ];
     var textureCube = THREE.ImageUtils.loadTextureCube( urls );
 
     /* Load the shader for the sky box */
