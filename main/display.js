@@ -281,7 +281,7 @@ var CameraControl = function () {
 			case 0:
 				camonDiv.style.display = 'none';
 				camoffDiv.style.display = 'block';
-				if (! avatar.crashed) {
+				if (! avatar.crashed() ) {
 					camera.lookAt(new THREE.Vector3(0,0,0));
 				}
 				break;
