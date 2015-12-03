@@ -160,6 +160,9 @@ function init() {
         gameOver.domElement.style.top = window.innerHeight/2 - 132 + 'px';
         soundControl.domElement.style.left =  window.innerWidth - controlWidth + 'px';
         camControl.domElement.style.left =  window.innerWidth - controlWidth + 'px';
+        paused.domElement.style.width = window.innerWidth + 'px';
+        paused.domElement.style.height = window.innerHeight + 'px';
+        paused.domElement.children[0].children[0].style.lineHeight = window.innerHeight*.9+'px';
 
     }
 }
