@@ -40,3 +40,73 @@ function addSkyBox() {
     scene.add( skyboxMesh );
     scene.textureCube = textureCube;
 }
+
+// Create the game board (plane) and return
+function createBoard() {
+
+    // Custom shader setup
+    uniforms = THREE.UniformsUtils.merge( [
+
+        THREE.UniformsLib[ "common" ],
+        THREE.UniformsLib[ "shadowmap" ],
+        THREE.UniformsLib[ "lights" ],
+    {
+        ambient: { type: "c", value: new THREE.Color(0x121212) },
+        diffuse: { type: "c", value: new THREE.Color(0xffffff) },
+        gtime: {type: "f", value: 0.0},
+        wavePos: {type: "2f", value: new THREE.Vector3(0.0, 0.0) },
+        wavet: {type: "f", value: 200.0},
+        waveColor: { type: "c", value: new THREE.Color(0xffaa00) },
+        waveHeight: { type: "f", value: 20.0 },
+        transparency: {type: "f", value: 0.8} // Usually 0.8
+    }] );
+
+    // var mat = new THREE.ShaderMaterial(
+    //     {
+    //       uniforms : uniforms,
+    //       vertexShader : vertexShaderText,
+    //       fragmentShader : fragmentShaderText,
+    //     });
+
+    // create the ground plane
+    var numW = 5; // size of each box
+    var numH = 5; // size of each box
+    var planeW =boardWidth / numW; // number of boxes (wireframe)
+    var planeH = boardHeight / numH; // number of boxes (wireframe)
+
+    var mat = new THREE.MeshLambertMaterial({color: 0xffffff});
+    mat.transparent = true;
+    mat.opacity = 0.8;
+
+    var plane = new THREE.Mesh(
+        new THREE.PlaneBufferGeometry( planeW*numW, planeH*numH, planeW, planeH ),
+        mat
+    );
+    plane.receiveShadow = true;
+
+    // rotate and position the plane
+    plane.rotation.x = -0.5 * Math.PI;
+    plane.position.set(0,0,0);
+
+    plane.name = "Board";
+
+    return plane;
+}
+
+// Load shader code and then call init to load the game
+// This pattern synchronizes loading the shader code before proceeding to avoid race conditions
+function getPlaneVShader() {
+    vertexShaderText = "";
+    $.get( "main/vertex.shader", function( data ) {
+        vertexShaderText = data;
+        getPlaneFShader();
+    })
+}
+function getPlaneFShader() {
+    fragmentShaderText = "";
+    $.get( "main/fragment.shader", function( data ) {
+        fragmentShaderText = data;
+        init();
+    })
+
+}
