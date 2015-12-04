@@ -21,11 +21,13 @@ Physijs.scripts.ammo = './ammo.js';
 
 // Globals
 var stats, display, gameOver, paused, camControl, camera;
+var uniforms, vertexShaderText, fragmentShaderText;
 
 // init is run once per session
 // render allocation and other per session operations are run
 // per game operations are done in newGame() to allow restarting the game
 function init() {
+
     stats = initStats(); // Contains FPS information
     display = initDisplay(); // Contains current level
     gameOver = initGameOver(); // Plays game over message
@@ -224,10 +226,12 @@ function newGame() {
     // Necessary to reset displays on game restarts
     display.reset();
     gameOver.reset();
+
 }
 
 function render() {
     stats.update();
+    uniforms.gtime.value += 0.5;
 
     // Add an asteroid every 5 seconds and cleanup existing asteroids
     var time = clock.getElapsedTime();
@@ -298,4 +302,5 @@ function getBoardPoint() {
         boardHeight/2 - Math.random() * boardHeight);
 }
 
-window.onload = init
+// getPlaneVShader lods both shader codes and then runs init
+window.onload = getPlaneVShader
