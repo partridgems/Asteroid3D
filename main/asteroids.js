@@ -116,29 +116,3 @@ function cleanupAsteroids() {
         }
     }
 }
-
-// Create the game board (plane) and return
-function createBoard() {
-    // create the ground plane
-    var numW = 5; // size of each box
-    var numH = 5; // size of each box
-    var planeW =boardWidth / numW; // number of boxes (wireframe)
-    var planeH = boardHeight / numH; // number of boxes (wireframe)
-
-    var mat = new THREE.MeshLambertMaterial({color: 0xffffff});
-    mat.transparent = true;
-    mat.opacity = 0.8;
-    var plane = new THREE.Mesh(
-        new THREE.PlaneBufferGeometry( planeW*numW, planeH*numH, planeW, planeH ),
-        mat
-    );
-    plane.receiveShadow = true;
-
-    // rotate and position the plane
-    plane.rotation.x = -0.5 * Math.PI;
-    plane.position.set(0,0,0);
-
-    plane.name = "Board";
-
-    return plane;
-}
