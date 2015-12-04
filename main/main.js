@@ -13,7 +13,7 @@ var asterStAlt = 150; // Asteroid max starting altitude
 var soundDefault = 0; // Starting sound condition. 0: Off 1: On
 var controlWidth = 200; // Width of control divs
 
-debug_mode = false; // Allows additional keyboard controls for development
+debug_mode = true; // Allows additional keyboard controls for development
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
@@ -97,7 +97,7 @@ function init() {
         // Align just above center middle
         gameOver.domElement.style.position = 'absolute';
         gameOver.domElement.style.left = (window.innerWidth/2 - gameOver.w/2).toString()+'px';
-        gameOver.domElement.style.top = window.innerHeight/2 - 132 + 'px';
+        gameOver.domElement.style.top = window.innerHeight/2 - 160 + 'px';
         gameOver.domElement.style.visibility = 'hidden';
 
         document.getElementById('GameOver').appendChild(gameOver.domElement);
@@ -159,7 +159,7 @@ function init() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         display.domElement.style.left = (window.innerWidth/2 - display.w/2).toString()+'px';
         gameOver.domElement.style.left = (window.innerWidth/2 - gameOver.w/2).toString()+'px';
-        gameOver.domElement.style.top = window.innerHeight/2 - 132 + 'px';
+        gameOver.domElement.style.top = window.innerHeight/2 - 160 + 'px';
         soundControl.domElement.style.left =  window.innerWidth - controlWidth + 'px';
         camControl.domElement.style.left =  window.innerWidth - controlWidth + 'px';
         paused.domElement.style.width = window.innerWidth + 'px';
@@ -209,6 +209,7 @@ function newGame() {
     light.shadowCameraFar = 600;
     light.name = "Light";
     scene.add(light);
+    // uniforms.lightPosition.value = light.position;
 
     // Add the avatar (ship)
     avatar = getAvatar();
@@ -223,18 +224,29 @@ function newGame() {
     addAsteroid(6, 7);
     addAsteroid(8, 5);
 
+    scene.uniforms = loadUniforms();
+    var fb = getFireball();
+    fb.position.set(10000,10000,10000);
+    scene.add(fb);
+    scene.fb = fb;
+
     // Necessary to reset displays on game restarts
     display.reset();
     gameOver.reset();
 
 }
 
+var start = Date.now();
+
 function render() {
     stats.update();
-    uniforms.gtime.value += 0.5;
+    // uniforms.gtime.value += 0.5;
+
+    var time = clock.getElapsedTime();
+
+    scene.uniforms[ 'time' ].value = .00025 * ( Date.now() - start );
 
     // Add an asteroid every 5 seconds and cleanup existing asteroids
-    var time = clock.getElapsedTime();
     if (time % 5 < 1 / 59 ) {
         addAsteroid(Math.random() * 6 + 2,
             Math.random()*(5+difficulty) + 4*difficulty + 3);
@@ -274,6 +286,10 @@ function render() {
     } else { // We've crashed!
         clock.stop();
         gameOver.update();
+
+        var sc = Math.min(0.01+scene.fb.scale.x, 1.0);
+        scene.fb.position.copy(avatar.position);
+        scene.fb.scale.set(sc,sc,sc);
 
         // Fade out the music
         bgmusic.setVolume( bgmusic.getVolume() * 0.99 );
