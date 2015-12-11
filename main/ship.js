@@ -221,12 +221,23 @@ function getShield() {
         new THREE.Vector3(0, 1, 2)
     ];
     var shieldGeometry = new THREE.ConvexGeometry(sPoints);
+
     // Move the ship's center so that it rotates as expected
     shieldGeometry.applyMatrix( new THREE.Matrix4().makeTranslation(0, 0, -1.8) );
+
     var shieldSize = 1.4;
+
     shieldGeometry.applyMatrix( new THREE.Matrix4().makeScale(shieldSize, shieldSize, shieldSize) );
-    var shieldMaterial = new THREE.MeshLambertMaterial({color: 0x62cbff,
-        shading: THREE.SmoothShading, transparent: true, opacity: .3});
+
+    var shieldMaterial = new THREE.ShaderMaterial( {
+
+        uniforms: scene.uniforms,
+        vertexShader: vertexSHShaderText,
+        fragmentShader: fragmentSHShaderText
+
+    } );
+    shieldMaterial.transparent = true;
+    shieldMaterial.opacity = 0.3;
     var shield = new Physijs.ConvexMesh(shieldGeometry, shieldMaterial);
 
     shield.name = "Shield";

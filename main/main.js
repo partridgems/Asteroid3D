@@ -13,7 +13,7 @@ var asterStAlt = 150; // Asteroid max starting altitude
 var soundDefault = 0; // Starting sound condition. 0: Off 1: On
 var controlWidth = 200; // Width of control divs
 
-debug_mode = false; // Allows additional keyboard controls for development
+debug_mode = true; // Allows additional keyboard controls for development
 
 // Physijs setup
 Physijs.scripts.worker = './libs/physijs_worker.js';
@@ -21,7 +21,8 @@ Physijs.scripts.ammo = './ammo.js';
 
 // Globals
 var stats, display, gameOver, paused, camControl, camera;
-var uniforms, vertexShaderText, fragmentShaderText;
+var uniforms, vertexFBShaderText, fragmentFBShaderText;
+var vertexSHShaderText, fragmentSHShaderText;
 
 // init is run once per session
 // render allocation and other per session operations are run
@@ -177,6 +178,7 @@ function newGame() {
     scene = new Physijs.Scene();
 
     scene.paused = false;
+    scene.uniforms = loadUniforms();
 
     // SPACE!!
     scene.setGravity(new THREE.Vector3(0, 0, 0));
@@ -209,7 +211,7 @@ function newGame() {
     light.shadowCameraFar = 600;
     light.name = "Light";
     scene.add(light);
-    // uniforms.lightPosition.value = light.position;
+    scene.spot = light;
 
     // Add the avatar (ship)
     avatar = getAvatar();
@@ -224,7 +226,6 @@ function newGame() {
     addAsteroid(6, 7);
     addAsteroid(8, 5);
 
-    scene.uniforms = loadUniforms();
     var fb = getFireball();
     fb.position.set(10000,10000,10000);
     scene.add(fb);
@@ -240,11 +241,16 @@ var start = Date.now();
 
 function render() {
     stats.update();
-    // uniforms.gtime.value += 0.5;
 
     var time = clock.getElapsedTime();
 
+    // Update uniforms
     scene.uniforms[ 'time' ].value = .00025 * ( Date.now() - start );
+    scene.uniforms[ 'gtime' ].value += 1;
+    var relSpotPos = new THREE.Vector3(0,0,0);
+    relSpotPos.copy(scene.spot.position);
+    relSpotPos.sub(avatar.position);
+    scene.uniforms[ 'lightLocation' ].value = relSpotPos;
 
     // Add an asteroid every 5 seconds and cleanup existing asteroids
     if (time % 5 < 1 / 59 ) {
@@ -319,4 +325,4 @@ function getBoardPoint() {
 }
 
 // getPlaneVShader lods both shader codes and then runs init
-window.onload = getPlaneVShader
+window.onload = getFireVShader

@@ -1,0 +1,29 @@
+
+    vec2 w1center = vec2(300.0, 400.0);
+    vec2 w2center = vec2(0.0, 0.0);
+
+float v_x1 = vertex.x - w1center[0];
+float v_y1 = vertex.y - w1center[1];
+float w1radius = sqrt(v_x1*v_x1 + v_y1*v_y1);
+
+float v_x2 = vertex.x - w2center[0];
+float v_y2 = vertex.y - w2center[1];
+float w2radius = sqrt(v_x2*v_x2 + v_y2*v_y2);
+
+float z1height = 0.0;
+float z2height = 0.0;
+
+float w1speed = 6.0;
+float w2speed = 10.0;
+
+float w1height = 50.0;
+float w2height = 30.0;
+
+if ( 0.0 < w1radius - gtime*w1speed && w1radius - gtime*w1speed < 100.0*M_PI) {
+    z1height = 1.0 * (w1height - w1height * cos( ( w1radius - gtime*w1speed ) / 50.0  ) ) / (1.0 + w1radius * w1radius / 1.0);
+}
+if ( 0.0 < w2radius - gtime*w2speed && w2radius - gtime*w2speed < 100.0*M_PI) {
+    z2height = (w2height - w2height * cos( ( w2radius - gtime*w2speed ) / 50.0  ) ) / ( w2radius * w2radius );
+}
+
+    vertex.z = z1height + z2height;

@@ -1,5 +1,5 @@
 /*
- * shaders contains all shader code for the final part of the assignment
+ * shaders contains shader code for the final part of the assignment
  * Author: Mike Partridge
  */
 
@@ -41,63 +41,6 @@ function addSkyBox() {
     scene.textureCube = textureCube;
 }
 
-// Create the game board (plane) and return
-function createBoard() {
-
-    // Custom shader setup
-    // uniforms = THREE.UniformsUtils.merge( [
-    //
-    //     THREE.UniformsLib[ "common" ],
-    //     THREE.UniformsLib[ "shadowmap" ],
-    //     THREE.UniformsLib[ "lights" ],
-    // {
-    //     ambient: { type: "c", value: new THREE.Color(0x121212) },
-    //     diffuse: { type: "c", value: new THREE.Color(0xffffff) },
-    //     gtime: { type: "f", value: 0.0},
-    //     wavePos: { type: "2f", value: new THREE.Vector3(0.0, 0.0) },
-    //     wavet: { type: "f", value: 200.0},
-    //     waveColor: { type: "c", value: new THREE.Color(0xffaa00) },
-    //     waveHeight: { type: "f", value: 20.0 },
-    //     transparency: { type: "f", value: 0.8}, // Usually 0.8
-    //     lightPosition: { type: "3f", value: new THREE.Vector3(0.0, 0.0, 0.0) }
-    //
-    // }] );
-
-    var mat = new THREE.MeshLambertMaterial({color: 0xffffff});
-
-    // var mat = new THREE.ShaderMaterial(
-    //     {
-    //       uniforms : uniforms,
-    //       vertexShader : vertexShaderText,
-    //       fragmentShader : fragmentShaderText,
-    //     });
-
-    // create the ground plane
-    var numW = 5; // size of each box
-    var numH = 5; // size of each box
-    var planeW =boardWidth / numW; // number of boxes (wireframe)
-    var planeH = boardHeight / numH; // number of boxes (wireframe)
-
-
-    mat.transparent = true;
-    mat.opacity = 0.8;
-
-    var plane = new THREE.Mesh(
-        new THREE.PlaneBufferGeometry( planeW*numW, planeH*numH, planeW, planeH ),
-        mat
-    );
-    plane.receiveShadow = true;
-
-    // rotate and position the plane
-    plane.rotation.x = -0.5 * Math.PI;
-    plane.position.set(0,0,0);
-
-    plane.name = "Board";
-
-    return plane;
-}
-
-
 /*
  * Fireball effect
  * Source: https://www.clicktorelease.com/code/perlin/explosion.html
@@ -108,8 +51,8 @@ function getFireball() {
     var material = new THREE.ShaderMaterial( {
 
         uniforms: scene.uniforms,
-        vertexShader: vertexShaderText,
-        fragmentShader: fragmentShaderText
+        vertexShader: vertexFBShaderText,
+        fragmentShader: fragmentFBShaderText
 
     } );
 
@@ -123,26 +66,43 @@ function loadUniforms() {
         tExplosion: { type: "t", value: THREE.ImageUtils.loadTexture( 'media/explosion.png' ) },
         time: { type: "f", value: 0.0 },
         weight: { type: "f", value: 8.0 },
-        size: { type: "f", value: 0.1 }
+        size: { type: "f", value: 0.1 },
+		gtime: {type: "f", value: 0.0},
+        ambient: { type: "c", value: new THREE.Color(0x62cbff) },
+		diffuse: { type: "c", value: new THREE.Color(0x62cbff) },
+		specular: { type: "c", value: new THREE.Color(0x62cbff) },
+		shininess: {type:"f",value:40.0},
+        lightLocation: { type:"3f", value: new THREE.Vector3(0,0,0) }
     }
 }
 
 // Load shader code and then call init to load the game
 // This pattern synchronizes loading the shader code before proceeding to avoid race conditions
-function getPlaneVShader() {
-    vertexShaderText = "";
-    // $.get( "main/vertex.shader", function( data ) {
+function getFireVShader() {
+    vertexFBShaderText = "";
     $.get( "main/fireballVertex.shader", function( data ) {
-        vertexShaderText = data;
-        getPlaneFShader();
+        vertexFBShaderText = data;
+        getFireFShader();
     })
 }
-function getPlaneFShader() {
-    fragmentShaderText = "";
-    // $.get( "main/fragment.shader", function( data ) {
+function getFireFShader() {
+    fragmentFBShaderText = "";
     $.get( "main/fireballFragment.shader", function( data ) {
-        fragmentShaderText = data;
+        fragmentFBShaderText = data;
+        getShieldVShader();
+    })
+}
+function getShieldVShader() {
+    vertexSHShaderText = "";
+    $.get( "main/vertex.shader", function( data ) {
+        vertexSHShaderText = data;
+        getShieldFShader();
+    })
+}
+function getShieldFShader() {
+    fragmentSHShaderText = "";
+    $.get( "main/fragment.shader", function( data ) {
+        fragmentSHShaderText = data;
         init();
     })
-
 }
