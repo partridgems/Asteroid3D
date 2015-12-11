@@ -4,6 +4,12 @@ Team Members:
 
 Mike Partridge
 
+Shaders/GLSL project:
+
+For the shaders section, I added the following features: a skybox with stars and planets surrounds the field. When the ship dies and flies off, more of the scene is revealed. I added the ability to have the camera follow the ship during play to view some more of the sky box. I also added reflective asteroids. They have a random chance to spawn 3% of the time any asteroid spawns. The console reports when they spawn. They use a static reflection of the sky box. Since there is a large planet out of view to the left, sometimes these asteroids will glint as they reflect the planet. They are hard to see coming, so watch out! I also added a custom shader that was not done by me (cited in the code) to create an explosion effect when the ship crashes. Finally, I added a custom shader (of my own design) to cause the ship's shield (when that power up is picked up) to grow and shrink in a pulsating effect. The brightness of the shield also grows and shrinks at the same time. The effect is especially good when the ship is in the shadowy corners of the field since the ambient lighting of the shield grows more than the diffuse.
+
+To better view these effects, use 't' to create a reflective asteroid and 'o' to turn the shield on and off. These controls are available in debug mode (set debug_mode=true in the console).
+
 
 To Play:
 
@@ -23,11 +29,6 @@ P to Pause
 ENTER to restart after a death
 
 (There are some hidden controls for Dev, set debug_mode=true in console to use them: t,y,u,i,o are all commands)
-
-Shaders:
-
-For the shaders section, I added the following features: a skybox with stars and planets surrounds the field. When the ship dies and flies off, more of the scene is revealed. I added the ability to have the camera follow the ship during play to view some more of the sky box. I also added reflective asteroids. They have a random chance to spawn 3% of the time any asteroid spawns. The console reports when they spawn. They use a static reflection of the sky box. Since there is a large planet out of view to the left, sometimes these asteroids will glint as they reflect the planet. They are hard to see coming, so watch out! I also added a custom shader that was not done by me (cited in the code) to create an explosion effect when the ship crashes. Finally, I added a custom shader (of my own design) to cause the ship's shield (when that power up is picked up) to grow and shrink in a pulsating effect. The brightness of the shield also grows and shrinks at the same time. The effect is especially good when the ship is in the shadowy corners of the field since the ambient lighting of the shield grows more than the diffuse.
-
 
 Reflection:
 
